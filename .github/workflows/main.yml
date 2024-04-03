@@ -20,9 +20,10 @@ jobs:
 
       - name: Install tflint
         run: |
-          curl -L "$(curl -s https://api.github.com/repos/terraform-linters/tflint/releases/latest | grep -o -E "https://.+?_Linux_x86_64.zip")" -o tflint.zip
-          unzip tflint.zip
+          curl -LO $(curl -s https://api.github.com/repos/terraform-linters/tflint/releases/latest | grep -o -E "https://.+?_Linux_x86_64.zip")
+          unzip tflint_*.zip
           sudo mv tflint /usr/local/bin/
+        shell: bash
 
       - name: Terraform fmt check
         run: terraform fmt -check -recursive
