@@ -1,36 +1,29 @@
-name: Terraform Lint and Validate
+name: Terraform Checks
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]  # Adjust branch to trigger on
 
 jobs:
-  lint_and_validate:
+  terraform_checks:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 1.0.0
+        uses: hashicorp/setup-terraform@v3
 
-      - name: Install tflint
-        run: |
-          curl -LO $(curl -s https://api.github.com/repos/terraform-linters/tflint/releases/latest | grep -o -E "https://.+?_Linux_x86_64.zip")
-          unzip tflint_*.zip
-          sudo mv tflint /usr/local/bin/
-        shell: bash
+      - name: Terraform fmt
+        run: terraform fmt -recursive
 
-      - name: Terraform fmt check
-        run: terraform fmt -check -recursive
-
-      - name: Terraform validate
+      - name: Terraform Validate
         run: terraform validate
 
-      - name: tflint
-        run: tflint
+      - name: Install TFLint
+        run: curl -sfL https://releases.hashicorp.com/tflint/v${{ env.TFLINT_VERSION }}/tflint_linux_amd64.zip -o tflint.zip && unzip tflint.zip && mv tflint bin/tflint
+
+      - name: Run TFLint
+        env:
+          TFLINT_CONFIG: path/to/your/tflint.config  # Optional, path to your TFLint config file
+        run: bin/tflint
 
