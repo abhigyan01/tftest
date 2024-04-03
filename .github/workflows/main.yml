@@ -23,15 +23,9 @@ jobs:
 
       - name: Download TFLint
         run: |
-          curl -sfL https://releases.hashicorp.com/tflint/v/tflint_linux_amd64.zip -o tflint.zip
-          unzip tflint.zip -d tflint
-          rm tflint.zip
-        working-directory: ${{ github.workspace }}
-
-      - name: Install TFLint
-        run: |
-          chmod +x tflint/tflint
-          sudo mv tflint/tflint /usr/local/bin/
+          sudo apt update
+          sudo apt install snapd
+          sudo snap install tflint
         working-directory: ${{ github.workspace }}
 
       - name: Verify TFLint Installation
