@@ -21,14 +21,18 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Install TFLint
+      - name: Download TFLint
         run: |
           curl -sfL https://releases.hashicorp.com/tflint/v/tflint_linux_amd64.zip -o tflint.zip
-          unzip tflint.zip -d bin
+          unzip tflint.zip -d tflint
           rm tflint.zip
-          chmod +x bin/tflint
+        working-directory: ${{ github.workspace }}
+
+      - name: Install TFLint
+        run: |
+          chmod +x tflint/tflint
+          sudo mv tflint/tflint /usr/local/bin/
         working-directory: ${{ github.workspace }}
 
       - name: Verify TFLint Installation
-        run: bin/tflint --version
-        working-directory: ${{ github.workspace }}
+        run: tflint --version
