@@ -30,3 +30,6 @@ jobs:
 
       - name: Verify TFLint Installation
         run: tflint --version
+        
+      - name: Running tflint
+        run: tflint --version
